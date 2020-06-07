@@ -34,7 +34,7 @@ class ProdukController extends Controller
     public function update(Request $request,$id){
 
         $product = Produk::find($id);
-        dd($product->foto_produk);
+        // dd($product->foto_produk);
         $product->update([
             'nama_produk' => $request->nama_produk,
             'jenis_produk' => $request->jenis_produk,
@@ -45,7 +45,7 @@ class ProdukController extends Controller
         $fotoLocation = 'assets/gambar';
 
         if($file){
-            Storage::delete('assets/gambar',$product->find($id)->foto_produk);
+            Storage::delete('assets/gambar/',$product->foto_produk);
             $request->foto_produk->storeAs($fotoLocation,$request->foto_produk->hashName());
         }
 
@@ -60,9 +60,9 @@ class ProdukController extends Controller
         return response()->json($product);
     }
 
-    public function destroy($id){
-        $product = Produk::destroy($id);
-        Storage::delete('assets/gambar',$product->foto_produk);
+    public function destroy(Produk $product,$id){
+        $product = Produk::find($id)->delete();
+        Storage::delete('assets/gambar/',$product->foto_produk);
         return response()->json([
             'message' => 'Data Berhasil Dihapus'
         ]);
